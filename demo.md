@@ -1,5 +1,40 @@
 # Trust Demo
 
+
+> In this demo, we're going to take a short tour of the features that set Confluent apart as the most trusted partner for data in motion.
+
+> I'm going to play a few different characters who work for a company onboarding with Confluent Cloud.
+
+1. Open an incognito browser window.
+
+## Things to keep handy
+
+sso link
+```
+https://confluent.cloud/login/sso/confluent-org-2355759
+```
+
+Okta login:
+```
+https://confluenttrust-demo.okta.com
+```
+
+Okta company name:
+```
+confluent-org-2355759
+```
+
+
+
+
+
+
+
+
+
+## scratch
+
+
 Do the demo
 
 > say these words

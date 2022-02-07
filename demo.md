@@ -7,6 +7,32 @@
 
 1. Open an incognito browser window.
 
+2. Paste in the SSO URL link
+    ```
+    https://confluent.cloud/login/sso/confluent-org-2355759
+    ```
+3. Log into Confluent Cloud via Okta SSO with the user
+    ```
+    chuck+admin1@confluent.io
+    ```
+    (use the trust demo password you set up in Okta)
+
+4. Go to "Add cluster" to show BYOK option. Cancel and select `trust-demo` dedicated cluster.
+
+5. Show cluster elasticity.
+   -  In Cluster Overview -> Dashboard, show cluster load metric.
+   - In Cluster Overview -> Cluster settings -> Capacity, show the "Adjust capacity" slider.
+
+
+
+## Summary
+
+- BYOK
+- Elastic scaling with cluster load metric
+- 
+
+
+
 ## Things to keep handy
 
 sso link

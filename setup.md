@@ -28,10 +28,10 @@ Users
   - use email alias `devleadB`
   - email chuck+devleadB@confluent.io
 - Michael (member of devteamA)
-  - use email alias `devA1`
+  - use email alias `dev1`
   - e.g. chuck+dev1@confluent.io
 - Maygol (also member of devteamA)
-  - use email alias `devA2`
+  - use email alias `dev2`
   - e.g. chuck+dev2@confluent.io
 
 Groups

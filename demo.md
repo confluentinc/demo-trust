@@ -11,6 +11,13 @@
     ```
     https://confluent.cloud/login/sso/confluent-org-2355759
     ```
+    Keep the okta URL open in another tab so you can easily sign out of accounts.
+    ```
+    https://confluenttrust-demo.okta.com/
+    ```
+
+    > Single Sign-On integration with your favorite enterprise security vendors like Okta!
+
 3. Log into Confluent Cloud via Okta SSO with the user
     ```
     chuck+admin1@confluent.io
@@ -23,14 +30,53 @@
    -  In Cluster Overview -> Dashboard, show cluster load metric.
    - In Cluster Overview -> Cluster settings -> Capacity, show the "Adjust capacity" slider.
 
+6. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
+    > Here we see org admin, env admin, developer lead, and two developers. This is a scalable way to manage access. Give managers ownership over their own isolated part of the system.
+
+7. Show devlead's rolebinding on the trust-demo cluster.
+
+8. Log in as devlead.
+
+9. Show stream lineage for topic.
+   - Drill into schema and show schema tag.
+   - Go to Schema Registry -> Tag Management -> Recommended to show some of the recommended tags.
+
+10. Open the terminal and use confluent CLI to log in as `chuck+devlead@confluent.io`.
+    ```bash
+    confluent login
+    ```
+
+11. Set up audit log API key
+
+11. Split screen terminal with devlead reading audit log on one side and dev2 on other side trying to log in.
+    ```bash
+    # log in as devlead on left
+    confluent blah blah
+
+    confluent consume audit logs blah
+    ```
+
+    ```bash
+    # log in as dev2 on right
+    confluent consume gcp.commerce.facts.purchases topic
+    ```
+
+    > Audit logs are cool. It's just a kafka topic, which means you can use connectors to integrate Confluent Cloud access data into 3rd party security tools like Splunk as a part of your company-wide access pattern monitoring strategy.
+
+11. Create rolebindings for dev1 and dev2
+
+    > look, it's not just GUI! There's a REST API and a CLI as well. Very scriptable! Automatable! Onboarding 100 devs becomes a simple script.
+
+1. show support portal (click on liferaft icon in top right)
 
 ## Summary
 
+- SSO integration
 - BYOK
 - Elastic scaling with cluster load metric
-- 
-
+- Stream Governance
+- Scalable access management with rolebindings
 
 
 ## Things to keep handy
@@ -50,34 +96,7 @@ Okta company name:
 confluent-org-2355759
 ```
 
-
-
-
-
-
-
-
-
-## scratch
-
-
-Do the demo
-
-> say these words
-
-Here is a draft outline for the flow of the demo:
-- Log in as admin to set org/env rolebindings
-- Log in as environment admin to set cluster rolebindings
-- Log in as team lead to set team rolebindings on prefixed kafka topics using a script (show off that this is all CLI/API enabled, and thus automatable)
-- Create a cli consumer for audit log events (pretending now to be an admin)
-- Use cli producer as a dev to trigger audit log events, which is a good point to talk about the value of audit logs being just a normal kafka topic and sinking to Splunk
-- I, as audit log admin, see this poor developer needs access. I look them up in Okta to see who their team lead is. I, the admin, will not get bogged down in granting individuals access. I'm going to bug the team lead to get their shit together.
-
-> Where is stream governance? Maybe create a tag and put it on a schema field and then search in the catalogue? Also look at stream lineage flow?
-
 ## Useful Commands
 
 Put useful commands here.
 
-Sign in as dev team lead and:
-- iterate through list of emails to create developerread roles to members of the dev team for topic `gcp.commerce.fact.purchases` and consumer group prefixed with `devteamA`

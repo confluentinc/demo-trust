@@ -29,3 +29,6 @@ As the RBAC and audit log products mature, this demo will be able to evolve into
 
 We may be able to reuse or be inspired by material from CP RBAC course:
 - https://github.com/confluentinc/training-adm-sec-rbac
+
+Confluent Cloud api docs:
+- https://docs.confluent.io/cloud/current/api.html

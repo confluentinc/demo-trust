@@ -110,13 +110,66 @@ lkc-856k7
 
 Put useful commands here.
 
+create rolebinding
 ```bash
-XX_CCLOUD_RBAC=1 \
+export XX_CCLOUD_RBAC_DATAPLANE=1
+
 confluent iam rbac role-binding create \
     --role DeveloperRead \
     --principal User:chuck+dev1@confluent.io \
     --environment env-y60pp \
     --cloud-cluster lkc-856k7 \
+    --kafka-cluster-id lkc-856k7 \
     --resource Group:trust-app \
     --prefix
+```
+
+create api key
+```bash
+confluent api-key create --resource lkc-856k7
+```
+
+use api key (replace with whatever key you created)
+```bash
+confluent api-key use F4WEN42RY5T36TZB
+```
+
+consume from topic (requires DeveloperRead on topic and consumer group, as well as a SR api key)
+```bash
+confluent kafka topic consume \
+    gcp.commerce.fact.purchases \
+    --value-format avro
+    --group trust-app \
+    --cluster lkc-856k7 \
+    --sr-endpoint https://psrc-4r3n1.us-central1.gcp.confluent.cloud  \
+```
+
+Set up cli to consume audit logs
+```bash
+# View audit log cluster info
+confluent audit-log describe
+
+# use audit log env and cluster
+confluent env use env-w8q9m
+confluent kafka cluster use lkc-d6071
+
+# Create new audit log api key (max 2 keys)
+# confluent api-key create --service-account sa-yom2mj --resource lkc-d6071
+
+# Use audit log api key (or create your own first)
+confluent api-key use LKBI3R4U3TTCQPF6 --resource lkc-d6071
+```
+
+grab user info for dev2
+```bash
+confluent iam user list -o json \
+    | jq '.[] | select( .email |contains("dev2"))'
+```
+
+Scan audit logs for user dev2 getting denied (id u-38mwr0)
+```bash
+confluent kafka topic consume -b \
+    confluent-audit-log-events \
+    | grep u-38mwr0 \
+    | jq '. | select(.data.authorizationInfo.granted != true)'
 ```

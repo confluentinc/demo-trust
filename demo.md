@@ -96,7 +96,27 @@ Okta company name:
 confluent-org-2355759
 ```
 
+env ID
+```
+env-y60pp
+```
+
+Cluster ID
+```
+lkc-856k7
+```
+
 ## Useful Commands
 
 Put useful commands here.
 
+```bash
+XX_CCLOUD_RBAC=1 \
+confluent iam rbac role-binding create \
+    --role DeveloperRead \
+    --principal User:chuck+dev1@confluent.io \
+    --environment env-y60pp \
+    --cloud-cluster lkc-856k7 \
+    --resource Group:trust-app \
+    --prefix
+```

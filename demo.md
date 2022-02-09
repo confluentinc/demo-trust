@@ -52,7 +52,7 @@ Show cluster elasticity.
 
 1. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
-    > Here we see org admin, env admin, developer lead, and two developers. This is a scalable way to manage access. Give managers ownership over their own isolated part of the system.
+    > Here we see org admin, env admin, developer lead, and two developers. This is a scalable way to manage access. Give managers ownership over their own isolated part of the system with Role Based Access Control.
 
 1. Show devlead's rolebinding on the trust-demo cluster.
 
@@ -158,7 +158,7 @@ Show cluster elasticity.
         --resource lkc-856k7
     ```
 
-    > I didn't want you to see Maygol's secrets, so this was created before the demo. It's important to note that since Maygol created this API key, its access is limited to her access, and if her access changes, that API key's access automatically changes as well.
+    > I didn't want you to see Maygol's secrets, so this API key was created before the demo. It's important to note that since Maygol created this API key, its access is limited to her access, and if her access changes, that API key's access automatically changes as well.
 
 1. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
     ```bash
@@ -176,7 +176,7 @@ Show cluster elasticity.
 
 ## Need Help? We've Got Your Back
 
-1. show support portal (click on liferaft icon in top right)
+1. Show support portal (click on liferaft icon in top right)
     
     > If you need help at any point along the way, you can reach our world-class support staff easily. Here is the support portal with knowledge base articles, and here you can file a ticket. We have over 3 million hours of expertise helping customers along their journey to set their data in motion.
 
@@ -186,9 +186,9 @@ In this whirlwind tour, we had a taste of all the features that set Confluent ap
 
 - SSO integration to make it easy to onboard your employees to Confluent
 - BYOK to give you control over your at-rest data encryption
-- Elastic scaling with cluster load metric (take advantage of production experience with over 10,000 clusters)
-- Stream Governance to allow you to maintain data quality, set governance policies, and see end-to-end data flow
-- Scalable access management with rolebindings
+- Elastic scaling with cluster load metric, taking advantage of our production experience with over 10,000 clusters
+- Stream Governance to allow you to maintain data quality, see end-to-end data flow, and discover data across your organization
+- Scalable access management with Role Based Access Control, now with rolebindings for Kafka topics, consumer groups, and transactional IDs
 - Audit logs that can be exported to your security analysis tools as a part of your company-wide threat monitoring
 - Support that taps into over 3 million hours of expertise
 

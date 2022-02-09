@@ -18,7 +18,9 @@
     https://confluenttrust-demo.okta.com/
     ```
 
-    > Single Sign-On integration with your favorite enterprise security vendors like Okta!
+    > Here we see an Okta page. And that's because Confluent Cloud integrates with Single Sign-On to make authentication easy.
+
+    > Now I'm going to sign in as Priya, an environment admin.
 
 3. Log into Confluent Cloud via Okta SSO with the user
     ```
@@ -26,9 +28,17 @@
     ```
     (use the trust demo password you set up in Okta)
 
+    > You only see one environment right now because of the permissions Priya has. In the real world, these would be called things like Development, Staging, and Production. Priya has the power to manage this environment, so let's create a cluster.
+
 ## Bring Your Own Key
 
 4. Go to "Add cluster" to show BYOK option. Cancel and select `trust-demo` dedicated cluster.
+
+    > Confluent Cloud allows you to bring your own encryption key if you're the kind of company that likes more control over your security posture.
+
+    > For now, let's go back to the cluster that's already running.
+
+6. Go back to the `trust-demo` cluster.
 
 ## Elastic Scalability
 
@@ -36,17 +46,9 @@
    -  In Cluster Overview -> Dashboard, show cluster load metric.
    - In Cluster Overview -> Cluster settings -> Capacity, show the "Adjust capacity" slider.
 
-    > Mention production experience with over 10,000 clusters
+    > If you've ever run Kafka at scale, you know it can be challenging to make scaling decisions. Production experience with over 10,000 clusters has given us the ability to simplify your decision making process. We've created a single "cluster load" metric to help you decide if it's time to expand or shrink your cluster. Choose your capacity and we'll take care of doing all that scaling work behind the scenes.
 
 ## Stream Governance
-
-9. Show stream lineage for topic.
-   - Drill into schema and show schema tag.
-   - Go to Schema Registry -> Tag Management -> Recommended to show some of the recommended tags.
-
-    > Quality (schemas), observability (lineage), discovery (stream catalog and tagging)
-
-## Scale Access with RBAC -- Now with Kafka Resources
 
 6. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
@@ -54,43 +56,133 @@
 
 7. Show devlead's rolebinding on the trust-demo cluster.
 
+    > Jeff, the Developer Lead, has the `CloudClusterAdmin` role on the `trust-demo` cluster. Let's log in as Jeff to see what he sees.
+
+8. Log out as Priya (both confluent and okta) and log in as `chuck+devlead@confluent.io`.
+
+9. Show stream lineage for topic.
+   - Drill into schema and show schema tag.
+
+    > In the Stream Lineage view, we can see the end-to-end data flow across the cluster. It's not very interesting right now, but let's click into the purchases topic and look at the schema. Here we see a field tagged as "Sensitive". You can create your own tags or choose from suggested tags. Confluent has best-in-class data governance tools so you can enforce quality and promote discoverability.
+
+## Scale Access with RBAC -- Now with Kafka Resources
+
+1. Go to top right hamburger menu -> Accounts & access -> Access to look at Michael's access.
+
+    > Introducing for the first time, Role Based Access Control at the Kafka resource level. As Jeff the Developer Lead, I can give my team the resource-level access they need to do their work.
+
+    > This isn't just in the web console. All of this access control is made automation-friendly via API. Let's move to the command line.
+
 ## Audit Logs
 
-11. Set up audit log API key
+> All of this signing in and out and accessing data has actually been recorded as authorization events in a kafka topic called an audit log. Let's see some audit log events in real time.
 
-    > Audit logs are cool. It's just a kafka topic, which means you can use connectors to integrate Confluent Cloud access data into 3rd party security tools like Splunk as a part of your company-wide access pattern monitoring strategy.
+1. Bring up a terminal with split screen. In the left terminal, log in as the org admin (`chuck+training@confluent.io`).
+
+2. Describe the audit logs.
+    ```bash
+    confluent audit-log describe
+    ```
+
+    > The audit log topic is kept in its own Kafka cluster with its own service account. Let's configure the CLI to access these audit logs.
+
+3. Use audit log environment, cluster, and API key.
+    ```bash
+    confluent env use env-w8q9m
+    confluent kafka cluster use lkc-d6071
+    confluent api-key use LKBI3R4U3TTCQPF6 \
+        --resource lkc-d6071
+    ```
+
+    > Let's consume the tail of this log and see authorization events in real time.
+
+4. Consume the audit log.
+    ```bash
+    confluent kafka topic consume \
+        confluent-audit-log-events \
+        | grep u-38mwr0 \ # filter for dev2 user
+        | jq '. | select(.data.authorizationInfo.granted != true)'
+    ```
+
+5. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
+    ```bash
+    confluent login --no-browser
+    ```
+
+    A failed authorization attempt will show up in the left terminal.
+
+    > Audit logs are cool. It's just a kafka topic, so you can analyze the events in real time. It also means you can use connectors to integrate with 3rd party security tools like Splunk to pick up access patterns across all services at the company (not just Confluent). We have a bunch of customers actively using this feature.
+
+    > Ok so poor Maygol is blocked on her work. She can't access her Kafka topics. Let's help her out.
+
 
 ## Manage Access Programmatically
 
-8. Log in as devlead.
-
-10. Open the terminal and use confluent CLI to log in as `chuck+devlead@confluent.io`.
+1. On the left terminal, create a DeveloperRead rolebinding for dev2 so she can read the topics prefixed with `gcp.commerce`.
     ```bash
-    confluent login
+    confluent iam rbac role-binding create \
+        --role DeveloperRead \
+        --principal User:chuck+dev2@confluent.io \
+        --environment env-y60pp \
+        --cloud-cluster lkc-856k7 \
+        --kafka-cluster-id lkc-856k7 \
+        --resource Topic:gcp.commerce \
+        --prefix
     ```
 
-11. Split screen terminal with devlead reading audit log on one side and dev2 on other side trying to log in.
-    ```bash
-    # log in as devlead on left
-    confluent blah blah
+    > Now Maygol has read access to all topics prefixed with `gcp.commerce`. To consume that data, she also needs to be able to use a consumer group.
 
-    confluent consume audit logs blah
+2. Now create a DeveloperRead rolebinding for dev2 so she can use consumer groups prefixed with `trust-app`.
+    ```bash
+    confluent iam rbac role-binding create \
+        --role DeveloperRead \
+        --principal User:chuck+dev2@confluent.io \
+        --environment env-y60pp \
+        --cloud-cluster lkc-856k7 \
+        --kafka-cluster-id lkc-856k7 \
+        --resource Group:trust-app \
+        --prefix
+    ```
+    > Ok so now Maygol should be able to use consumer groups prefixed with `trust-app` to read the data from the topics she needs and incorporate them into the app the team is developing.
+    
+    > Let's log in as Maygol.
+
+3. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
+    ```bash
+    confluent login --no-browser
     ```
 
+4. In the right terminal, use Maygol's API key (previously created).
     ```bash
-    # log in as dev2 on right
-    confluent consume gcp.commerce.facts.purchases topic
+    confluent api-key use TVRXJH53XV6QXLQI \
+        --resource lkc-856k7
     ```
 
-11. Create rolebindings for dev1 and dev2
+    > I didn't want you to see Maygol's secrets, so this was created before the demo. It's important to note that since Maygol created this API key, its access is limited to her access, and if her access changes, that API key's access automatically changes as well.
 
-    > look, it's not just GUI! There's a REST API and a CLI as well. Very scriptable! Automatable! Onboarding 100 devs becomes a simple script.
+5. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
+    ```bash
+    confluent kafka topic consume \
+        gcp.commerce.fact.purchases \
+        --value-format avro \
+        --group trust-app \
+        --cluster lkc-856k7 \
+        --sr-endpoint https://psrc-4r3n1.us-central1.gcp.confluent.cloud  
+    ```
+    
+    > We also need a separate API key to access schema registry. And here the data is flowing.
+    
+    > When the team is ready, they can create a service account for the app and apply RBAC to that service account across different environments as well. Confluent Cloud is opinionated about separating the identities of people (users) and apps (service accounts).
 
 ## Need Help? We've Got Your Back
 
 1. show support portal (click on liferaft icon in top right)
+    
+    > If you need help at any point along the way, you can reach our world-class support staff easily. Here is the support portal with knowledge base articles, and here you can file a ticket. We have over 3 million hours of expertise helping customers along their journey to set their data in motion.
 
 ## Summary
+
+In this whirlwind tour, we had a taste of all the features that set Confluent apart as the most trusted data streaming partner, including:
 
 - SSO integration to make it easy to onboard your employees to Confluent
 - BYOK to give you control over your at-rest data encryption
@@ -100,98 +192,4 @@
 - Audit logs that can be exported to your security analysis tools as a part of your company-wide threat monitoring
 - Support that taps into over 3 million hours of expertise
 
-
-## Things to keep handy
-
-sso link
-```
-https://confluent.cloud/login/sso/confluent-org-2355759
-```
-
-Okta login:
-```
-https://confluenttrust-demo.okta.com
-```
-
-Okta company name:
-```
-confluent-org-2355759
-```
-
-env ID
-```
-env-y60pp
-```
-
-Cluster ID
-```
-lkc-856k7
-```
-
-## Useful Commands
-
-Put useful commands here.
-
-create rolebinding
-```bash
-export XX_CCLOUD_RBAC_DATAPLANE=1
-
-confluent iam rbac role-binding create \
-    --role DeveloperRead \
-    --principal User:chuck+dev1@confluent.io \
-    --environment env-y60pp \
-    --cloud-cluster lkc-856k7 \
-    --kafka-cluster-id lkc-856k7 \
-    --resource Group:trust-app \
-    --prefix
-```
-
-create api key
-```bash
-confluent api-key create --resource lkc-856k7
-```
-
-use api key (replace with whatever key you created)
-```bash
-confluent api-key use F4WEN42RY5T36TZB
-```
-
-consume from topic (requires DeveloperRead on topic and consumer group, as well as a SR api key)
-```bash
-confluent kafka topic consume \
-    gcp.commerce.fact.purchases \
-    --value-format avro
-    --group trust-app \
-    --cluster lkc-856k7 \
-    --sr-endpoint https://psrc-4r3n1.us-central1.gcp.confluent.cloud  \
-```
-
-Set up cli to consume audit logs
-```bash
-# View audit log cluster info
-confluent audit-log describe
-
-# use audit log env and cluster
-confluent env use env-w8q9m
-confluent kafka cluster use lkc-d6071
-
-# Create new audit log api key (max 2 keys)
-# confluent api-key create --service-account sa-yom2mj --resource lkc-d6071
-
-# Use audit log api key (or create your own first)
-confluent api-key use LKBI3R4U3TTCQPF6 --resource lkc-d6071
-```
-
-grab user info for dev2
-```bash
-confluent iam user list -o json \
-    | jq '.[] | select( .email |contains("dev2"))'
-```
-
-Scan audit logs for user dev2 getting denied (id u-38mwr0)
-```bash
-confluent kafka topic consume -b \
-    confluent-audit-log-events \
-    | grep u-38mwr0 \
-    | jq '. | select(.data.authorizationInfo.granted != true)'
-```
+Trust is earned, so go ahead and start with a small use case for free, and as we gain your confidence, we'll be happy to help you set your data in motion.

@@ -55,3 +55,9 @@ Groups
 8. Assign the Okta app to all your users in Okta
 9. You should now be able to open an incognito browser window, go to `https://confluent.cloud/login/sso/<your okta org>` and sign in with any of the okta users.
 
+# Switch on RBAC Feature Flag in your Terminal
+
+Before the demo, enable data plane RBAC capabilities in the `confluent` CLI with:
+```bash
+export XX_CCLOUD_RBAC_DATAPLANE=1
+```

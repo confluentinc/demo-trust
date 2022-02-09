@@ -9,6 +9,18 @@
 - Audit logs
 - Expert support
 
+## Setup
+
+- See [Setup](./setup.md).
+
+## Demo
+
+- See [Demo](./demo.md).
+
+## Teardown
+
+- See [Teardown](./teardown.md).
+
 
 ## Future Work
 As the RBAC and audit log products mature, this demo will be able to evolve into something really impressive. Here are the key capabilities this demo needs to shine:

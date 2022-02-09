@@ -9,7 +9,7 @@
 
 1. Open an incognito browser window.
 
-2. Paste in the SSO URL link
+1. Paste in the SSO URL link
     ```
     https://confluent.cloud/login/sso/confluent-org-2355759
     ```
@@ -22,7 +22,7 @@
 
     > Now I'm going to sign in as Priya, an environment admin.
 
-3. Log into Confluent Cloud via Okta SSO with the user
+1. Log into Confluent Cloud via Okta SSO with the user
     ```
     chuck+admin1@confluent.io
     ```
@@ -32,35 +32,35 @@
 
 ## Bring Your Own Key
 
-4. Go to "Add cluster" to show BYOK option. Cancel and select `trust-demo` dedicated cluster.
+1. Go to "Add cluster" to show BYOK option. Cancel and select `trust-demo` dedicated cluster.
 
     > Confluent Cloud allows you to bring your own encryption key if you're the kind of company that likes more control over your security posture.
 
     > For now, let's go back to the cluster that's already running.
 
-6. Go back to the `trust-demo` cluster.
+1. Go back to the `trust-demo` cluster.
 
 ## Elastic Scalability
 
-5. Show cluster elasticity.
+Show cluster elasticity.
    -  In Cluster Overview -> Dashboard, show cluster load metric.
    - In Cluster Overview -> Cluster settings -> Capacity, show the "Adjust capacity" slider.
 
-    > If you've ever run Kafka at scale, you know it can be challenging to make scaling decisions. Production experience with over 10,000 clusters has given us the ability to simplify your decision making process. We've created a single "cluster load" metric to help you decide if it's time to expand or shrink your cluster. Choose your capacity and we'll take care of doing all that scaling work behind the scenes.
+> If you've ever run Kafka at scale, you know it can be challenging to make scaling decisions. Production experience with over 10,000 clusters has given us the ability to simplify your decision making process. We've created a single "cluster load" metric to help you decide if it's time to expand or shrink your cluster. Choose your capacity and we'll take care of doing all that scaling work behind the scenes.
 
 ## Stream Governance
 
-6. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
+1. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
     > Here we see org admin, env admin, developer lead, and two developers. This is a scalable way to manage access. Give managers ownership over their own isolated part of the system.
 
-7. Show devlead's rolebinding on the trust-demo cluster.
+1. Show devlead's rolebinding on the trust-demo cluster.
 
     > Jeff, the Developer Lead, has the `CloudClusterAdmin` role on the `trust-demo` cluster. Let's log in as Jeff to see what he sees.
 
-8. Log out as Priya (both confluent and okta) and log in as `chuck+devlead@confluent.io`.
+1. Log out as Priya (both confluent and okta) and log in as `chuck+devlead@confluent.io`.
 
-9. Show stream lineage for topic.
+1. Show stream lineage for topic.
    - Drill into schema and show schema tag.
 
     > In the Stream Lineage view, we can see the end-to-end data flow across the cluster. It's not very interesting right now, but let's click into the purchases topic and look at the schema. Here we see a field tagged as "Sensitive". You can create your own tags or choose from suggested tags. Confluent has best-in-class data governance tools so you can enforce quality and promote discoverability.
@@ -79,14 +79,14 @@
 
 1. Bring up a terminal with split screen. In the left terminal, log in as the org admin (`chuck+training@confluent.io`).
 
-2. Describe the audit logs.
+1. Describe the audit logs.
     ```bash
     confluent audit-log describe
     ```
 
     > The audit log topic is kept in its own Kafka cluster with its own service account. Let's configure the CLI to access these audit logs.
 
-3. Use audit log environment, cluster, and API key.
+1. Use audit log environment, cluster, and API key.
     ```bash
     confluent env use env-w8q9m
     confluent kafka cluster use lkc-d6071
@@ -96,7 +96,7 @@
 
     > Let's consume the tail of this log and see authorization events in real time.
 
-4. Consume the audit log.
+1. Consume the audit log.
     ```bash
     confluent kafka topic consume \
         confluent-audit-log-events \
@@ -104,7 +104,7 @@
         | jq '. | select(.data.authorizationInfo.granted != true)'
     ```
 
-5. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
+1. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
     ```bash
     confluent login --no-browser
     ```
@@ -132,7 +132,7 @@
 
     > Now Maygol has read access to all topics prefixed with `gcp.commerce`. To consume that data, she also needs to be able to use a consumer group.
 
-2. Now create a DeveloperRead rolebinding for dev2 so she can use consumer groups prefixed with `trust-app`.
+1. Now create a DeveloperRead rolebinding for dev2 so she can use consumer groups prefixed with `trust-app`.
     ```bash
     confluent iam rbac role-binding create \
         --role DeveloperRead \
@@ -147,12 +147,12 @@
     
     > Let's log in as Maygol.
 
-3. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
+1. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
     ```bash
     confluent login --no-browser
     ```
 
-4. In the right terminal, use Maygol's API key (previously created).
+1. In the right terminal, use Maygol's API key (previously created).
     ```bash
     confluent api-key use TVRXJH53XV6QXLQI \
         --resource lkc-856k7
@@ -160,7 +160,7 @@
 
     > I didn't want you to see Maygol's secrets, so this was created before the demo. It's important to note that since Maygol created this API key, its access is limited to her access, and if her access changes, that API key's access automatically changes as well.
 
-5. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
+1. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
     ```bash
     confluent kafka topic consume \
         gcp.commerce.fact.purchases \
@@ -192,4 +192,4 @@ In this whirlwind tour, we had a taste of all the features that set Confluent ap
 - Audit logs that can be exported to your security analysis tools as a part of your company-wide threat monitoring
 - Support that taps into over 3 million hours of expertise
 
-Trust is earned, so go ahead and start with a small use case for free, and as we gain your confidence, we'll be happy to help you set your data in motion.
+Trust is earned, so go ahead and start with a small use case for free in Confluent Cloud. As we gain your confidence, we'll be happy to help you set your data in motion.

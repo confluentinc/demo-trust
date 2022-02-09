@@ -193,3 +193,27 @@ In this whirlwind tour, we had a taste of all the features that set Confluent ap
 - Support that taps into over 3 million hours of expertise
 
 Trust is earned, so go ahead and start with a small use case for free in Confluent Cloud. As we gain your confidence, we'll be happy to help you set your data in motion.
+
+## Re-running the Demo
+
+If you aren't tearing anything down, but you'd like to re-run the demo, the only thing you need to do is delete the rolebindings for dev2 (logged in as devlead, admin1, or your org admin user). This is required so on your next run, the audit logs can show a failed authorization attempt by dev 2:
+
+```bash
+confluent iam rbac role-binding delete \
+    --role DeveloperRead \
+    --principal User:chuck+dev2@confluent.io \
+    --environment env-y60pp \
+    --cloud-cluster lkc-856k7 \
+    --kafka-cluster-id lkc-856k7 \
+    --resource Topic:gcp.commerce \
+    --prefix
+
+confluent iam rbac role-binding delete \
+    --role DeveloperRead \
+    --principal User:chuck+dev2@confluent.io \
+    --environment env-y60pp \
+    --cloud-cluster lkc-856k7 \
+    --kafka-cluster-id lkc-856k7 \
+    --resource Group:trust-app \
+    --prefix
+```

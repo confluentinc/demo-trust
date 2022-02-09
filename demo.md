@@ -5,6 +5,8 @@
 
 > I'm going to play a few different characters who work for a company onboarding with Confluent Cloud.
 
+## SSO Integration
+
 1. Open an incognito browser window.
 
 2. Paste in the SSO URL link
@@ -24,11 +26,27 @@
     ```
     (use the trust demo password you set up in Okta)
 
+## Bring Your Own Key
+
 4. Go to "Add cluster" to show BYOK option. Cancel and select `trust-demo` dedicated cluster.
+
+## Elastic Scalability
 
 5. Show cluster elasticity.
    -  In Cluster Overview -> Dashboard, show cluster load metric.
    - In Cluster Overview -> Cluster settings -> Capacity, show the "Adjust capacity" slider.
+
+    > Mention production experience with over 10,000 clusters
+
+## Stream Governance
+
+9. Show stream lineage for topic.
+   - Drill into schema and show schema tag.
+   - Go to Schema Registry -> Tag Management -> Recommended to show some of the recommended tags.
+
+    > Quality (schemas), observability (lineage), discovery (stream catalog and tagging)
+
+## Scale Access with RBAC -- Now with Kafka Resources
 
 6. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
@@ -36,18 +54,20 @@
 
 7. Show devlead's rolebinding on the trust-demo cluster.
 
-8. Log in as devlead.
+## Audit Logs
 
-9. Show stream lineage for topic.
-   - Drill into schema and show schema tag.
-   - Go to Schema Registry -> Tag Management -> Recommended to show some of the recommended tags.
+11. Set up audit log API key
+
+    > Audit logs are cool. It's just a kafka topic, which means you can use connectors to integrate Confluent Cloud access data into 3rd party security tools like Splunk as a part of your company-wide access pattern monitoring strategy.
+
+## Manage Access Programmatically
+
+8. Log in as devlead.
 
 10. Open the terminal and use confluent CLI to log in as `chuck+devlead@confluent.io`.
     ```bash
     confluent login
     ```
-
-11. Set up audit log API key
 
 11. Split screen terminal with devlead reading audit log on one side and dev2 on other side trying to log in.
     ```bash
@@ -62,21 +82,23 @@
     confluent consume gcp.commerce.facts.purchases topic
     ```
 
-    > Audit logs are cool. It's just a kafka topic, which means you can use connectors to integrate Confluent Cloud access data into 3rd party security tools like Splunk as a part of your company-wide access pattern monitoring strategy.
-
 11. Create rolebindings for dev1 and dev2
 
     > look, it's not just GUI! There's a REST API and a CLI as well. Very scriptable! Automatable! Onboarding 100 devs becomes a simple script.
+
+## Need Help? We've Got Your Back
 
 1. show support portal (click on liferaft icon in top right)
 
 ## Summary
 
-- SSO integration
-- BYOK
-- Elastic scaling with cluster load metric
-- Stream Governance
+- SSO integration to make it easy to onboard your employees to Confluent
+- BYOK to give you control over your data encryption
+- Elastic scaling with cluster load metric (take advantage of production experience with over 10,000 clusters)
+- Stream Governance to allow you to maintain data quality, set governance policies, and see end-to-end data flow
 - Scalable access management with rolebindings
+- Audit logs that can be exported to your security analysis tools as a part of your company-wide threat monitoring
+- Support that taps into over 3 million hours of expertise
 
 
 ## Things to keep handy

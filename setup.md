@@ -19,14 +19,14 @@ You can create all these users in one go and give them the same secure password 
 
 Users
 - You (whatever confluent cloud account you are using for this demo)
-  - e.g. chuck@confluent.io
+  - e.g. chuck+training@confluent.io
   - You are playing the role of Confluent Cloud Organization Admin. You are the bootstrap superuser.
+- Environment admin (call her Priya)
+  - use email alias `admin1`
+  - e.g. chuck+admin1@confluent.io
 - devteamA team lead (call him Jeff)
-  - use email alias `devleadA`
-  - e.g. chuck+devleadA@confluent.io
-- devteamB team lead (call her Priya)
-  - use email alias `devleadB`
-  - email chuck+devleadB@confluent.io
+  - use email alias `devlead`
+  - e.g. chuck+devlead@confluent.io
 - Michael (member of devteamA)
   - use email alias `dev1`
   - e.g. chuck+dev1@confluent.io

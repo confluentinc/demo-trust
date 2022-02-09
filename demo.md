@@ -93,7 +93,7 @@
 ## Summary
 
 - SSO integration to make it easy to onboard your employees to Confluent
-- BYOK to give you control over your data encryption
+- BYOK to give you control over your at-rest data encryption
 - Elastic scaling with cluster load metric (take advantage of production experience with over 10,000 clusters)
 - Stream Governance to allow you to maintain data quality, set governance policies, and see end-to-end data flow
 - Scalable access management with rolebindings

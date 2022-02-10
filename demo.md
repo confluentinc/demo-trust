@@ -30,11 +30,13 @@
 
     > You only see one environment right now because of the permissions Priya has. In the real world, these would be called things like Development, Staging, and Production. Priya has the power to manage this environment, so let's create a cluster.
 
-## Bring Your Own Key
+## Private Networking and Bring Your Own Key
 
-1. Go to "Add cluster" to show BYOK option. Cancel and select `trust-demo` dedicated cluster.
+1. Go to "Add cluster" and select AWS to show netowrking and BYOK.
 
-    > Confluent Cloud allows you to bring your own encryption key if you're the kind of company that likes more control over your security posture.
+    > Because data is encrypted in transit, "Internet" is a great option for most production use cases. But if your organization you're the kind of company that likes more control over your security posture, you can take advantage of other more isolated networking options.
+
+    > In addition, Confluent Cloud allows you to bring your own encryption key if you want full control.
 
     > For now, let's go back to the cluster that's already running.
 
@@ -48,7 +50,19 @@ Show cluster elasticity.
 
 > If you've ever run Kafka at scale, you know it can be challenging to make scaling decisions. Production experience with over 10,000 clusters has given us the ability to simplify your decision making process. We've created a single "cluster load" metric to help you decide if it's time to expand or shrink your cluster. Choose your capacity and we'll take care of doing all that scaling work behind the scenes.
 
+
 ## Stream Governance
+
+> So we've looked at security and elasticity, but what about the data itself? Confluent has Stream Governance tools to ensure your data is high quality, observable, and discoverable.
+
+1. Show stream lineage for topic.
+   - Drill into schema and show schema tag.
+
+    > In the Stream Lineage view, we can see the end-to-end data flow across the cluster. It's not very interesting right now, but let's click into the purchases topic and look at the schema. Here we see a field tagged as "Sensitive". You can create your own tags or choose from suggested tags. Confluent has best-in-class data governance tools so you can enforce quality and promote discoverability.
+
+## Scale Access with RBAC -- Now with Kafka Resources
+
+> One of the most important aspects of any production system is how easy it is to manage access at scale. Let's see how that works.
 
 1. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
@@ -57,15 +71,6 @@ Show cluster elasticity.
 1. Show devlead's rolebinding on the trust-demo cluster.
 
     > Jeff, the Developer Lead, has the `CloudClusterAdmin` role on the `trust-demo` cluster. Let's log in as Jeff to see what he sees.
-
-1. Log out as Priya (both confluent and okta) and log in as `chuck+devlead@confluent.io`.
-
-1. Show stream lineage for topic.
-   - Drill into schema and show schema tag.
-
-    > In the Stream Lineage view, we can see the end-to-end data flow across the cluster. It's not very interesting right now, but let's click into the purchases topic and look at the schema. Here we see a field tagged as "Sensitive". You can create your own tags or choose from suggested tags. Confluent has best-in-class data governance tools so you can enforce quality and promote discoverability.
-
-## Scale Access with RBAC -- Now with Kafka Resources
 
 1. Go to top right hamburger menu -> Accounts & access -> Access to look at Michael's access.
 

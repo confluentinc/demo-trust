@@ -105,7 +105,7 @@ Show cluster elasticity.
     ```bash
     confluent kafka topic consume \
         confluent-audit-log-events \
-        | grep u-38mwr0 \ # filter for dev2 user
+        | grep u-38mwr0 \ 
         | jq '. | select(.data.authorizationInfo.granted != true)'
     ```
 

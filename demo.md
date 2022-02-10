@@ -66,11 +66,11 @@ Show cluster elasticity.
 
 1. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
-    > Here we see org admin, env admin, developer lead, and two developers. This is a scalable way to manage access. Give managers ownership over their own isolated part of the system with Role Based Access Control.
+    > Here we see org admin, env admin, developer lead, and two developers. Nobody wants to manage access for hundreds of users and applications. That's why you can use Role Based Access Control to give different people ownership over their own isolated part of the system.
 
 1. Show devlead's rolebinding on the trust-demo cluster.
 
-    > Jeff, the Developer Lead, has the `CloudClusterAdmin` role on the `trust-demo` cluster. Let's log in as Jeff to see what he sees.
+    > Jeff, the Developer Lead, has the `CloudClusterAdmin` role on the `trust-demo` cluster.
 
 1. Go to top right hamburger menu -> Accounts & access -> Access to look at Michael's access.
 

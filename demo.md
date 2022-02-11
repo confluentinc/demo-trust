@@ -190,7 +190,7 @@ Show cluster elasticity.
 In this whirlwind tour, we had a taste of all the features that set Confluent apart as the most trusted data streaming partner, including:
 
 - SSO integration to make it easy to onboard your employees to Confluent
-- BYOK to give you control over your at-rest data encryption
+- Private networking and Bring Your Own Key to give you tighter security
 - Elastic scaling with cluster load metric, taking advantage of our production experience with over 10,000 clusters
 - Stream Governance to allow you to maintain data quality, see end-to-end data flow, and discover data across your organization
 - Scalable access management with Role Based Access Control, now with rolebindings for Kafka topics, consumer groups, and transactional IDs

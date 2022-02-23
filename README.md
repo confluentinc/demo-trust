@@ -1,6 +1,6 @@
 # Trust Launch Demo
 
-"Trust" is a key characteristic for Confluent. Businesses need to feel confident that we will keep their data safe and be reliable partners for their most critical needs. This demo helps to support the launch of the Trust marketing by highlighting several Confluent Cloud capabilities:
+"Trust" is a key characteristic for Confluent. Businesses need to feel confident that Confluent will keep their data safe and be reliable partners for their most critical needs. This demo helps to support the launch of the Trust marketing by highlighting several Confluent Cloud capabilities:
 - Single Sign-On integration
 - Bring Your Own Key
 - On-demand cluster shrink/expand

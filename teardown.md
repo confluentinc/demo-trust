@@ -4,5 +4,6 @@ You'll want to clean up stuff. Be especially wary of anything in your demo that 
 
 - Delete API keys (cloud and audit log keys)
 - Delete confluent cloud users
+- Delete trust-demo cluster
 - Delete or deactivate okta organization
 - Disable SSO in the confluent cloud org

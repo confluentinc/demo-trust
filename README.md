@@ -22,16 +22,20 @@
 - See [Teardown](./teardown.md).
 
 
-## Future Work
-As the RBAC and audit log products mature, this demo will be able to evolve into something really impressive. Here are the key capabilities this demo needs to shine:
-- RBAC group access control
-- RBAC for schema registry, ksqlDB, and Kafka Connect
-- Out of the box support for sending audit logs to Splunk, Elastic, etc.
-
 ## References
 
-We may be able to reuse or be inspired by material from CP RBAC course:
-- https://github.com/confluentinc/training-adm-sec-rbac
-
-Confluent Cloud api docs:
-- https://docs.confluent.io/cloud/current/api.html
+- Confluent Cloud Single Sign-on:
+  - https://docs.confluent.io/cloud/current/access-management/authenticate/sso/sso.html
+- Confluent Cloud networking options:
+  - https://docs.confluent.io/cloud/current/networking/overview.html
+- Confluent Cloud Bring Your Own Key (BYOK)
+  - https://docs.confluent.io/cloud/current/clusters/byok/index.html
+- Confluent Cloud cluster expand and shrink:
+  - https://docs.confluent.io/cloud/current/clusters/expand.html
+  - https://docs.confluent.io/cloud/current/clusters/shrink.html
+- Confluent Cloud Audit Logs:
+  - https://docs.confluent.io/cloud/current/monitoring/audit-logging/cloud-audit-log-concepts.html
+- Confluent Cloud Role Based Access Control:
+  - https://docs.confluent.io/cloud/current/access-management/access-control/cloud-rbac.html
+- Confluent Support Portal:
+  - https://support.confluent.io/

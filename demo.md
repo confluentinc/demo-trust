@@ -1,9 +1,7 @@
 # Trust Demo
 
 
-> In this demo, we're going to take a short tour of the features that set Confluent apart as the most trusted partner for data in motion.
 
-> I'm going to play a few different characters who work for a company onboarding with Confluent Cloud.
 
 ## SSO Integration
 
@@ -18,9 +16,7 @@
     https://confluenttrust-demo.okta.com/
     ```
 
-    > Here we see an Okta page. And that's because Confluent Cloud integrates with Single Sign-On to make authentication easy.
-
-    > Now I'm going to sign in as Priya, an environment admin.
+    > Thanks Kevin! To start, I'm going to log into Confluent Cloud, which redirects to my company's identity provider (Okta, in this case). Confluent Cloud integrates Single Sign-On to make authentication easy.
 
 1. Log into Confluent Cloud via Okta SSO with the user
     ```
@@ -28,17 +24,19 @@
     ```
     (use the trust demo password you set up in Okta)
 
-    > You only see one environment right now because of the permissions Priya has. In the real world, these would be called things like Development, Staging, and Production. Priya has the power to manage this environment, so let's create a cluster.
+    > Here you see only the environments for which I have access. Typically, there will be separate development, staging, and production environments, but you can create different environments according to your needs.
+
+    > Let's see some of the security options available when we create a new cluster.
 
 ## Private Networking and Bring Your Own Key
 
 1. Go to "Add cluster" and select AWS to show netowrking and BYOK.
 
-    > Because data is encrypted in transit, "Internet" is a great option for most production use cases. But if your organization you're the kind of company that likes more control over your security posture, you can take advantage of other more isolated networking options.
+    > Because data is encrypted in transit, "Internet" is a great option for most production use cases. But if your organization likes more control over your security posture, you can take advantage of other more isolated networking options like PrivateLink and Transit Gateway.
 
-    > In addition, Confluent Cloud allows you to bring your own encryption key if you want full control.
+    > In addition, Confluent Cloud allows you to bring your own encryption key if you want even more control over who can access your data.
 
-    > For now, let's go back to the cluster that's already running.
+    > Security is a great foundation, but I'm also responsible to make sure our clusters are resilient and can scale to meet the needs of the business. Let's switch over to a running cluster.
 
 1. Go back to the `trust-demo` cluster.
 
@@ -48,7 +46,7 @@ Show cluster elasticity.
    -  In Cluster Overview -> Dashboard, show cluster load metric.
    - In Cluster Overview -> Cluster settings -> Capacity, show the "Adjust capacity" slider.
 
-> If you've ever run Kafka at scale, you know it can be challenging to make scaling decisions. Production experience with over 10,000 clusters has given us the ability to simplify your decision making process. We've created a single "cluster load" metric to help you decide if it's time to expand or shrink your cluster. Choose your capacity and we'll take care of doing all that scaling work behind the scenes.
+> If you've ever run Kafka at scale, you know it can be challenging to make scaling decisions. Often, teams that self-manage Kafka clusters find it difficult to expand or shrink clusters in time to meet demand, opting instead to eat the cost of overprovisioning. Luckily I don't have that problem. Production experience with over 10,000 clusters has given Confluent the ability to simplify your decision making process. There's a single "cluster load" metric to help you decide if it's time to expand or shrink your cluster. Choose your capacity and Confluent take care of doing all that scaling work behind the scenes.
 
 
 ## Stream Governance

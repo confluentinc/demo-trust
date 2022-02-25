@@ -67,9 +67,9 @@ docker run -v ${PWD}:/home/gitpod/demo-trust \
 
 1. Fill in `scripts/.env` with values obtained from [Create Confluent Cloud Resources](#create-confluent-cloud-resources)
 
-2. Export the variables in each terminal shell you will run commands from.
+2. Export the variables in each terminal shell you will run commands from by sourcing a script.
 ```bash
-scripts/export-vars.sh
+source scripts/export-vars.sh
 ```
 
 ## Create a Confluent Cloud Organization

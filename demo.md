@@ -51,30 +51,32 @@ Show cluster elasticity.
 
 ## Stream Governance
 
-> So we've looked at security and elasticity, but what about the data itself? Confluent has Stream Governance tools to ensure your data is high quality, observable, and discoverable.
+> So we've looked at security and elasticity, but what about the data itself? That’s where Stream Governance come’s in -- the industry's only data governance suite for real-time event streaming.
 
 1. Show stream lineage for topic.
    - Drill into schema and show schema tag.
 
-    > In the Stream Lineage view, we can see the end-to-end data flow across the cluster. It's not very interesting right now, but let's click into the purchases topic and look at the schema. Here we see a field tagged as "Sensitive". You can create your own tags or choose from suggested tags. Confluent has best-in-class data governance tools so you can enforce quality and promote discoverability.
+    > In the Stream Lineage view, we can see the end-to-end data flow from source to destination. It's not very interesting right now, but let's click into the purchases topic and look at the schema. Confluent Schema Registry makes it easy to evolve schemas along with your business needs. Here we also see a field tagged as "Sensitive". Tags like this can be used to allow teams across your organization to discover the data they need.
+    
+    > Make sure to check out our other demos that focus extensively on Stream Governance.
 
 ## Scale Access with RBAC -- Now with Kafka Resources
 
-> One of the most important aspects of any production system is how easy it is to manage access at scale. Let's see how that works.
+> So I have a secure, elastic cluster with high quality data. Now I just need to onboard hundreds of architects and developers to use it. And I need to do this responsibly so each one of them has only the minimum access they need. That's where Role Based Access Control (aka RBAC) comes in.
 
 1. Go to top-right hamburger menu -> Administration -> Accounts & access and search for "Chuck" to bring up all the users for this demo.
 
-    > Here we see org admin, env admin, developer lead, and two developers. Nobody wants to manage access for hundreds of users and applications. That's why you can use Role Based Access Control to give different people ownership over their own isolated part of the system.
+    > Here we see an org admin, environment admin, developer lead, and two developers.
 
 1. Show devlead's rolebinding on the trust-demo cluster.
 
-    > Jeff, the Developer Lead, has the `CloudClusterAdmin` role on the `trust-demo` cluster.
+    > The Developer Lead has the `CloudClusterAdmin` role on the `trust-demo` cluster. Here we start to see the beauty of Role Based Access Control -- I can delegate access management for this cluster to the Developer Lead, who in turn can grant access to the rest of the team.
 
 1. Go to top right hamburger menu -> Accounts & access -> Access to look at Michael's access.
 
-    > Introducing for the first time, Role Based Access Control at the Kafka resource level. As Jeff the Developer Lead, I can give my team the resource-level access they need to do their work.
+    > Let's look at one of the developers. Introducing for the first time, Role Based Access Control at the Kafka resource level. As the Developer Lead, I can give my team the resource-level access they need to do their work.
 
-    > This isn't just in the web console. All of this access control is made automation-friendly via API. Let's move to the command line.
+    > So we have some users onboarded with granular permissions established. That's not quite enough, though. I also need visibility into how these resources are being used. Let's go to the command line.
 
 ## Audit Logs
 
@@ -114,9 +116,9 @@ Show cluster elasticity.
 
     A failed authorization attempt will show up in the left terminal.
 
-    > Audit logs are cool. It's just a kafka topic, so you can analyze the events in real time. It also means you can use connectors to integrate with 3rd party security tools like Splunk to pick up access patterns across all services at the company (not just Confluent). We have a bunch of customers actively using this feature.
+    > On the right, a developer is trying to read some data from the cluster, and we can see from the audit log on the left that she's been denied access. What's great about this is the audit log is just a kafka topic. That means I can use connectors to integrate these logs with any 3rd party security tool like Splunk or Elastic.
 
-    > Ok so poor Maygol is blocked on her work. She can't access her Kafka topics. Let's help her out.
+    > Ok so let's help this developer get the right access.
 
 
 ## Manage Access Programmatically
@@ -133,7 +135,7 @@ Show cluster elasticity.
         --prefix
     ```
 
-    > Now Maygol has read access to all topics prefixed with `gcp.commerce`. To consume that data, she also needs to be able to use a consumer group.
+    > Now the developer has read access to all topics prefixed with `gcp.commerce`. To consume that data, she also needs to be able to use a consumer group.
 
 1. Now create a DeveloperRead rolebinding for dev2 so she can use consumer groups prefixed with `trust-app`.
     ```bash
@@ -146,9 +148,11 @@ Show cluster elasticity.
         --resource Group:trust-app \
         --prefix
     ```
-    > Ok so now Maygol should be able to use consumer groups prefixed with `trust-app` to read the data from the topics she needs and incorporate them into the app the team is developing.
+    > Ok so now she should be able to use consumer groups prefixed with `trust-app` to read the data from the topics she needs and incorporate them into the app the team is developing.
+
+    > The important point here is that this was done programatically. I can just as easily iterate through a list of 100 developers to give them all the access they need.
     
-    > Let's log in as Maygol.
+    > Let's see if the developer can access the data now.
 
 1. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
     ```bash
@@ -161,8 +165,6 @@ Show cluster elasticity.
         --resource lkc-856k7
     ```
 
-    > I didn't want you to see Maygol's secrets, so this API key was created before the demo. It's important to note that since Maygol created this API key, its access is limited to her access, and if her access changes, that API key's access automatically changes as well.
-
 1. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
     ```bash
     confluent kafka topic consume \
@@ -172,16 +174,16 @@ Show cluster elasticity.
         --cluster lkc-856k7 \
         --sr-endpoint https://psrc-4r3n1.us-central1.gcp.confluent.cloud  
     ```
-    
-    > We also need a separate API key to access schema registry. And here the data is flowing.
-    
-    > When the team is ready, they can create a service account for the app and apply RBAC to that service account across different environments as well. Confluent Cloud is opinionated about separating the identities of people (users) and apps (service accounts).
+
+    > She did it! Data is flowing into her application.
 
 ## Need Help? We've Got Your Back
 
 1. Show support portal (click on liferaft icon in top right)
     
-    > If you need help at any point along the way, you can reach our world-class support staff easily. Here is the support portal with knowledge base articles, and here you can file a ticket. We have over 3 million hours of expertise helping customers along their journey to set their data in motion.
+    > Like with anything, there may be bumps along the way and my team might need help. I can easily reach a support staff highly specialized in helping teams like mine implement event streaming applications. Here is the support portal with knowledge base articles, and here you can file a ticket. Confluent has over 3 million hours of expertise helping customers along the journey to set their data in motion, so I feel like I'm in good hands.
+
+    > Alright, back to Kevin!
 
 ## Summary
 

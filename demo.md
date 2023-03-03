@@ -41,17 +41,18 @@
 4. Go back to to Oauth security and select API -> 
     Click default and create scope with name as “test-perf” and set as default scope
 
-5. Go back to oauth.tools, Curity Playground and type in metadata URL and to auto-fill in all necessary endpoints
+5. Go back to oauth.tools, Curity Playground and type in metadata URL to auto-fill in all necessary endpoints
 
-6. Go to back to Confluent Cloud: Accounts & Access, select Identity Provider tab and click +Add Provider
-    Choose Identity Provider (in this case, Okta)
-    Enter domain which will auto-populate Issuer URI and JWKS URI 
+6. Go to back to Confluent Cloud: Accounts & Access, select Identity Provider tab and click +Add Provider:
+-    Choose Identity Provider (in this case, Okta)
+-    Enter domain which will auto-populate Issuer URI and JWKS URI 
 
 7. Create an identity pool and identity claim
-    ```
-    Use identity pools to map groups and other attributes to policies (Role Based Access Controls or ACLs). Create an identity pool [demo pool] and copy identity pool ID.
-    ```
-    Use identity claims to filter which identities can be authenticated using this pool. Create identity claim with [claims.sub=='topic-perf'] and access with CloudClusterAdmin for “demo-trust” cluster.
+
+> Use identity pools to map groups and other attributes to policies (Role Based Access Controls or ACLs). 
+-    Create an identity pool [demo pool] and copy identity pool ID.
+> Use identity claims to filter which identities can be authenticated using this pool. 
+-    Create identity claim with [claims.sub=='topic-perf'] and access with CloudClusterAdmin for “demo-trust” cluster.
 
 ## Private Networking and Bring Your Own Key
 
@@ -108,8 +109,8 @@ Show cluster elasticity.
 >To produce data into Confluent, we will be using the kafka-producer-perf-test which is often used to optimize for throughput and latency. 
 1. Create a topic [topic-perf] where the perf test will produce into
 2: Create a java.config that connects to your CC that also includes the OAuth JSON Web Token (JWT) 
-```
-    The parameters you will need are: 
+
+The parameters you will need are: 
 ```    
     Confluent Cloud bootstrap servers
     Oauth token endpoint
@@ -117,9 +118,9 @@ Show cluster elasticity.
     Oauth scope
     Confluent Cloud cluster ID
     Confluent Cloud identity pool ID
-
+```
 3. Run the kafka-producer-perf test to produce data into Confluent with these configurations and without any client quotas. In this case we will be running 20,000 messages. 
-
+```
 user@User's-MBP13 ~ % kafka-producer-perf-test \
     --producer.config /Users/java.config \
     --throughput -1 \
@@ -130,7 +131,7 @@ user@User's-MBP13 ~ % kafka-producer-perf-test \
         batch.size=200000 \
         linger.ms=100 \
         acks=1
-
+```
 4. Notice how the average throughput is 0.7 MB/s by default. Now what if we want to limit the throughput to 0.5 MB/s? 
 20000 records sent, 89.908249 records/sec (0.69 MB/sec)
 
@@ -140,8 +141,7 @@ user@User's-MBP13 ~ % kafka-producer-perf-test \
 
 7. Go back to terminal and run the exact same test w/ same configurations
 
-8. Notice how the average throughput is 0.5 MB/s instead of 0.7 MB/s, which shows cloud client quota has been established and limited the throughput 
-20000 records sent, 65.612923 records/sec (0.50 MB/sec)
+8. Notice how the average throughput is 0.5 MB/s instead of 0.7 MB/s, which shows cloud client quota has been established and limited the throughput to 20000 records sent, 65.612923 records/sec (0.50 MB/sec)
 
 ## Audit Logs
 

@@ -112,12 +112,12 @@ Show cluster elasticity.
 
 The parameters you will need are: 
 ```    
-    Confluent Cloud bootstrap servers
-    Oauth token endpoint
-    Oauth client ID and secret
-    Oauth scope
-    Confluent Cloud cluster ID
-    Confluent Cloud identity pool ID
+Confluent Cloud bootstrap servers
+Oauth token endpoint
+Oauth client ID and secret
+Oauth scope
+Confluent Cloud cluster ID
+Confluent Cloud identity pool ID
 ```
 3. Run the kafka-producer-perf test to produce data into Confluent with these configurations and without any client quotas. In this case we will be running 20,000 messages. 
 ```

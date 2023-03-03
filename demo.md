@@ -7,7 +7,7 @@
 
 1. Open an incognito browser window.
 
-1. Paste in the SSO URL link
+2. Paste in the SSO URL link
     ```
     https://confluent.cloud/login/sso/confluent-org-2355759
     ```
@@ -18,7 +18,7 @@
 
     > Thanks Kevin! To start, I'm going to log into Confluent Cloud, which redirects to my company's identity provider (Okta, in this case). Confluent Cloud integrates Single Sign-On to make authentication easy.
 
-1. Log into Confluent Cloud via Okta SSO with the user
+3. Log into Confluent Cloud via Okta SSO with the user
     ```
     chuck+admin1@confluent.io
     ```
@@ -27,6 +27,31 @@
     > Here you see only the environments for which I have access. Typically, there will be separate development, staging, and production environments, but you can create different environments according to your needs.
 
     > Let's see some of the security options available when we create a new cluster.
+
+## OAuth Authentication
+
+>We support Oauth which is a centralized-identity management in addition to SSO now so administrators can work with a single repository of user IDs
+
+1. Sign up for Okta trial account
+
+2. Go to OAuth Application and create application integration with all defaults and copy client ID + secret
+
+3. Go to oauth.tools, Demo: Client Credentials Flow, type in and run client id + secrets to auto-generate token endpoint 
+    
+4. Go back to to Oauth security and select API -> 
+    Click default and create scope with name as “test-perf” and set as default scope
+
+5. Go back to oauth.tools, Curity Playground and type in metadata URL and to auto-fill in all necessary endpoints
+
+6. Go to back to Confluent Cloud: Accounts & Access, select Identity Provider tab and click +Add Provider
+    Choose Identity Provider (in this case, Okta)
+    Enter domain which will auto-populate Issuer URI and JWKS URI 
+
+7. Create an identity pool and identity claim
+    ```
+    Use identity pools to map groups and other attributes to policies (Role Based Access Controls or ACLs). Create an identity pool [demo pool] and copy identity pool ID.
+    ```
+    Use identity claims to filter which identities can be authenticated using this pool. Create identity claim with [claims.sub=='topic-perf'] and access with CloudClusterAdmin for “demo-trust” cluster.
 
 ## Private Networking and Bring Your Own Key
 
@@ -68,15 +93,55 @@ Show cluster elasticity.
 
     > Here we see an org admin, environment admin, developer lead, and two developers.
 
-1. Show devlead's rolebinding on the trust-demo cluster.
+2. Show devlead's rolebinding on the trust-demo cluster.
 
     > The Developer Lead has the `CloudClusterAdmin` role on the `trust-demo` cluster. Here we start to see the beauty of Role Based Access Control -- I can delegate access management for this cluster to the Developer Lead, who in turn can grant access to the rest of the team.
 
-1. Go to top right hamburger menu -> Accounts & access -> Access to look at Michael's access.
+3. Go to top right hamburger menu -> Accounts & access -> Access to look at Michael's access.
 
     > Let's look at one of the developers. Introducing for the first time, Role Based Access Control at the Kafka resource level. As the Developer Lead, I can give my team the resource-level access they need to do their work.
 
     > So we have some users onboarded with granular permissions established. That's not quite enough, though. I also need visibility into how these resources are being used. Let's go to the command line.
+
+## Cloud CLient Quotas
+
+>To produce data into Confluent, we will be using the kafka-producer-perf-test which is often used to optimize for throughput and latency. 
+1. Create a topic [topic-perf] where the perf test will produce into
+2: Create a java.config that connects to your CC that also includes the OAuth JSON Web Token (JWT) 
+```
+    The parameters you will need are: 
+```    
+    Confluent Cloud bootstrap servers
+    Oauth token endpoint
+    Oauth client ID and secret
+    Oauth scope
+    Confluent Cloud cluster ID
+    Confluent Cloud identity pool ID
+
+3. Run the kafka-producer-perf test to produce data into Confluent with these configurations and without any client quotas. In this case we will be running 20,000 messages. 
+
+user@User's-MBP13 ~ % kafka-producer-perf-test \
+    --producer.config /Users/java.config \
+    --throughput -1 \
+    --record-size 8000 \
+    --num-records 20000 \
+    --topic topic-perf \
+    --producer-props \
+        batch.size=200000 \
+        linger.ms=100 \
+        acks=1
+
+4. Notice how the average throughput is 0.7 MB/s by default. Now what if we want to limit the throughput to 0.5 MB/s? 
+20000 records sent, 89.908249 records/sec (0.69 MB/sec)
+
+5. Go to Cluster Settings in your cluster, select the Client Quotas tab and click +Add quota
+
+6. Assign cluster, desired ingress and egress throughputs and principal (service account or identity pool) 
+
+7. Go back to terminal and run the exact same test w/ same configurations
+
+8. Notice how the average throughput is 0.5 MB/s instead of 0.7 MB/s, which shows cloud client quota has been established and limited the throughput 
+20000 records sent, 65.612923 records/sec (0.50 MB/sec)
 
 ## Audit Logs
 
@@ -84,14 +149,14 @@ Show cluster elasticity.
 
 1. Bring up a terminal with split screen. In the left terminal, log in as the org admin (`chuck+training@confluent.io`).
 
-1. Describe the audit logs.
+2. Describe the audit logs.
     ```bash
     confluent audit-log describe
     ```
 
     > The audit log topic is kept in its own Kafka cluster with its own service account. Let's configure the CLI to access these audit logs.
 
-1. Use audit log environment, cluster, and API key.
+3. Use audit log environment, cluster, and API key.
     ```bash
     confluent env use env-w8q9m
     confluent kafka cluster use lkc-d6071
@@ -101,7 +166,7 @@ Show cluster elasticity.
 
     > Let's consume the tail of this log and see authorization events in real time.
 
-1. Consume the audit log.
+4. Consume the audit log.
     ```bash
     confluent kafka topic consume \
         confluent-audit-log-events \
@@ -109,7 +174,7 @@ Show cluster elasticity.
         | jq '. | select(.data.authorizationInfo.granted != true)'
     ```
 
-1. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
+5. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
     ```bash
     confluent login --no-browser
     ```
@@ -137,7 +202,7 @@ Show cluster elasticity.
 
     > Now the developer has read access to all topics prefixed with `gcp.commerce`. To consume that data, she also needs to be able to use a consumer group.
 
-1. Now create a DeveloperRead rolebinding for dev2 so she can use consumer groups prefixed with `trust-app`.
+2. Now create a DeveloperRead rolebinding for dev2 so she can use consumer groups prefixed with `trust-app`.
     ```bash
     confluent iam rbac role-binding create \
         --role DeveloperRead \
@@ -154,18 +219,18 @@ Show cluster elasticity.
     
     > Let's see if the developer can access the data now.
 
-1. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
+3. In the right terminal, log in with `chuck+dev2@confluent.io`. Make sure you log out of okta before pating the link returned by the command.
     ```bash
     confluent login --no-browser
     ```
 
-1. In the right terminal, use Maygol's API key (previously created).
+4. In the right terminal, use Maygol's API key (previously created).
     ```bash
     confluent api-key use TVRXJH53XV6QXLQI \
         --resource lkc-856k7
     ```
 
-1. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
+5. Consume from topic as Maygol (must input Schema Registry API key). Stop the topic to view the data a bit.
     ```bash
     confluent kafka topic consume \
         gcp.commerce.fact.purchases \

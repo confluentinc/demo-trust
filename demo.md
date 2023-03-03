@@ -104,7 +104,7 @@ Show cluster elasticity.
 
     > So we have some users onboarded with granular permissions established. That's not quite enough, though. I also need visibility into how these resources are being used. Let's go to the command line.
 
-## Cloud CLient Quotas
+## Cloud Client Quotas
 
 >To produce data into Confluent, we will be using the kafka-producer-perf-test which is often used to optimize for throughput and latency. 
 1. Create a topic [topic-perf] where the perf test will produce into
